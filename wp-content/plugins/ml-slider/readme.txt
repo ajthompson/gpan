@@ -4,7 +4,7 @@ Tags: wordpress slideshow,seo,slideshow,slider,widget,wordpress slider,image sli
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CQ84KC4X8YKW8
 Requires at least: 3.5
 Tested up to: 4.0
-Stable tag: 3.2.1
+Stable tag: 3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -145,6 +145,13 @@ See www.metaslider.com/documentation/image-cropping/
 6. Administration panel - selecting slides
 
 == Changelog ==
+
+= 3.3.1 [23/03/14] =
+
+* Fix: Remove 'create video playlist' option from Media Library (on Meta Slider page only)
+* Fix: Support for Enhanced Media Library plugin
+* Fix: Return public slide when DOING_AJAX
+* Improvement: Use admin actions to save slideshow settings
 
 = 3.3 [17/02/14] =
 

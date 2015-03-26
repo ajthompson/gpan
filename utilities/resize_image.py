@@ -1,6 +1,6 @@
 # resize images to 960x720 for use in a slider for the GPAN website
 from PIL import Image
-import os, sys, math
+import os, sys, math, datetime
 
 # Prints the given message if DEBUG is set to True
 def debugPrint(message):
@@ -10,6 +10,9 @@ def debugPrint(message):
 # Gets the directory containing this script
 def getScriptPath():
 	return os.path.dirname(os.path.realpath(sys.argv[0]))
+
+def isPicture(filename):
+	return filename.endswith(".bmp") or filename.endswith(".eps") or filename.endswith(".gif") or filename.endswith(".im") or filename.endswith(".jpeg") or filename.endswith(".jpg") or filename.endswith(".j2k") or filename.endswith(".j2p") or filename.endswith(".jpx") or filename.endswith(".tiff") or filename.endswith(".jfif") or filename.endswith(".jif") or filename.endswith(".png")
 
 # Resize the image to the global defined size
 def resizeImage(filename):
@@ -63,10 +66,22 @@ def resizeImage(filename):
 			resized = bg
 		elif (new_width > WIDTH):
 			# crop the picture
-			crop_offset = (img_width - WIDTH) / 2
-			crop_box = (crop_offset, 0,HEIGHT, img_width - WIDTH - crop_offset)
+			crop_offset = int((img_width - WIDTH) / 2)
+			left = crop_offset
+			if (left < 0):
+				left = 0
+			right = img_width - crop_offset
+			if (right > img_width):
+				right = img_width
+			top = 0
+			bottom = int(HEIGHT)
+			debugPrint("\t\tCrop box:")
+			debugPrint("\t\t\tleft  : %d" % left)
+			debugPrint("\t\t\tright : %d" % right)
+			debugPrint("\t\t\ttop   : %d" % top)
+			debugPrint("\t\t\tbottom: %d" % bottom)
+			crop_box = (left, top, right, bottom)
 			resized = image.crop(crop_box)
-			resized.load()
 
 		# save the image
 		resized.save(newName(filename))
@@ -87,29 +102,50 @@ def resizeImage(filename):
 		resized.save(newName(filename))
 
 	elif (img_width > WIDTH):
-		crop_offset = (img_width - WIDTH) / 2
-		crop_box = (crop_offset, 0,HEIGHT, img_width - WIDTH - crop_offset)
+		crop_offset = int((img_width - WIDTH) / 2)
+		left = crop_offset
+		if (left < 0):
+			left = 0
+		right = img_width - crop_offset
+		if (right > img_width):
+			right = img_width
+		top = 0
+		bottom = int(HEIGHT)
+		debugPrint("\t\tCrop box:")
+		debugPrint("\t\t\tleft  : %d" % left)
+		debugPrint("\t\t\tright : %d" % right)
+		debugPrint("\t\t\ttop   : %d" % top)
+		debugPrint("\t\t\tbottom: %d" % bottom)
+		crop_box = (left, top, right, bottom)
 		resized = image.crop(crop_box)
-		resized.load()
 		resized.save(newName(filename))
 
 
 def newName(filename):
-	return "resized_" + filename
-
+	global counter
+	name = "rsz%03d_%d_%02d_%02d.jpg" % (counter, date.year, date.month, date.day) 
+	counter = counter + 1
+	return name
 
 if __name__ == "__main__":
 	# Whether or not debug messages are printed
 	global DEBUG
-	DEBUG = True
+	# SET TO TRUE TO PRINT DEBUG MESSAGES
+	DEBUG = False
 
 	# The desired width and height
 	global HEIGHT
 	global WIDTH
 	HEIGHT = 1080.0
 	WIDTH = 1920.0
+
 	debugPrint("Default height: %d" % HEIGHT)
 	debugPrint("Default width : %d" % WIDTH)
+
+	global counter
+	global date
+	counter = 0
+	date = datetime.datetime.now()
 
 	# get the directory this file is in
 	path = getScriptPath()
@@ -117,7 +153,6 @@ if __name__ == "__main__":
 
 	# iterate through the directory
 	for filename in os.listdir(path):
-		# check the filetype
 		# Right now it's only tested with jpg, add support for png and other image formats maybe?
-		if filename.endswith(".jpg") and not filename.startswith("resized_"):
+		if isPicture (filename) and not filename.startswith("rsz"):
 			resizeImage(filename)

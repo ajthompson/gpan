@@ -177,7 +177,7 @@ def resizeImage(filename, width, height, mode):
 	debugPrint("", 2)
 
 	# save the image
-	resized.save(newName())
+	resized.save(name)
 
 
 # Generates a filename for the resized image.

@@ -376,5 +376,5 @@ if __name__ == "__main__":
 	debugPrint("", 0)
 
 	for filename in os.listdir(path):
-		if isPicture(filename) and not filename.startswith("rsz"):
+		if isPicture(filename.lower()) and not filename.startswith("rsz"):
 			resizeImage(filename, width, height, mode)
